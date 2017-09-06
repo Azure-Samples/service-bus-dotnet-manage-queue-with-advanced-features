@@ -1,4 +1,0 @@
-C:\Sources\dotnet-samples\service-bus-dotnet-manage-queue-with-advanced-features\bin\Debug\net452\ServiceBusQueueAdvanceFeatures.runtimeconfig.json
-C:\Sources\dotnet-samples\service-bus-dotnet-manage-queue-with-advanced-features\bin\Debug\net452\ServiceBusQueueAdvanceFeatures.runtimeconfig.dev.json
-C:\Sources\dotnet-samples\service-bus-dotnet-manage-queue-with-advanced-features\obj\Debug\net452\ServiceBusQueueAdvanceFeatures.csproj.ServiceBusQueueAdvanceFeatures.exe.config
-C:\Sources\dotnet-samples\service-bus-dotnet-manage-queue-with-advanced-features\obj\Debug\net452\ServiceBusQueueAdvanceFeatures.csproj.CoreCompileInputs.cache

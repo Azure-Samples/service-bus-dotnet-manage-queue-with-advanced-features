@@ -1,2 +1,0 @@
-C:\Sources\dotnet-samples\service-bus-dotnet-manage-queue-with-advanced-features\bin\Debug\netstandard1.6\ServiceBusQueueAdvanceFeatures.deps.json
-C:\Sources\dotnet-samples\service-bus-dotnet-manage-queue-with-advanced-features\obj\Debug\netstandard1.6\ServiceBusQueueAdvanceFeatures.csproj.CoreCompileInputs.cache
