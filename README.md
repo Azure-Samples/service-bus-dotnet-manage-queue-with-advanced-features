@@ -1,10 +1,10 @@
 ---
-services: Service
-platforms: .Net
+services: Service-Bus
+platforms: dotnet
 author: anudeepsharma
 ---
 
-# Getting Started with Service - Service Bus Queue Advance Features - in .Net #
+# Getting started on managing Service Bus Queues with advanced features in C# - sessions, dead-lettering, de-duplication and auto-deletion of idle entries #
 
           Azure Service Bus basic scenario sample.
           - Create namespace.
@@ -26,7 +26,7 @@ author: anudeepsharma
 
 To run this sample:
 
-Set the environment variable `AZURE_AUTH_LOCATION` with the full path for an auth file. See [how to create an auth file](https://github.com/Azure/azure-sdk-for-net/blob/Fluent/AUTH.md).
+Set the environment variable `AZURE_AUTH_LOCATION` with the full path for an auth file. See [how to create an auth file](https://github.com/Azure/azure-libraries-for-java/blob/master/AUTH.md).
 
     git clone https://github.com/Azure-Samples/service-bus-dotnet-manage-queue-with-advanced-features.git
 
