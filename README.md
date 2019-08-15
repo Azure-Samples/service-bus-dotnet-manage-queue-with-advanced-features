@@ -4,27 +4,27 @@ languages:
 - csharp
 products:
 - azure
-services: Service-Bus
-platforms: dotnet
-author: yaohaizh
+extensions:
+- services: Service-Bus
+- platforms: dotnet
 ---
 
 # Getting started on managing Service Bus Queues with advanced features in C# - sessions, dead-lettering, de-duplication and auto-deletion of idle entries #
 
-          Azure Service Bus basic scenario sample.
-          - Create namespace.
-          - Add a queue in namespace with features session and dead-lettering.
-          - Create another queue with auto-forwarding to first queue. [Remove]
-          - Create another queue with dead-letter auto-forwarding to first queue. [Remove]
-          - Create second queue with Deduplication and AutoDeleteOnIdle feature
-          - Update second queue to change time for AutoDeleteOnIdle.
-          - Update first queue to disable dead-letter forwarding and with new Send authorization rule
-          - Update queue to remove the Send Authorization rule.
-          - Get default authorization rule.
-          - Get the keys from authorization rule to connect to queue.
-          - Send a "Hello" message to queue using Data plan sdk for Service Bus.
-          - Delete queue
-          - Delete namespace
+ Azure Service Bus basic scenario sample.
+ - Create namespace.
+ - Add a queue in namespace with features session and dead-lettering.
+ - Create another queue with auto-forwarding to first queue. [Remove]
+ - Create another queue with dead-letter auto-forwarding to first queue. [Remove]
+ - Create second queue with Deduplication and AutoDeleteOnIdle feature
+ - Update second queue to change time for AutoDeleteOnIdle.
+ - Update first queue to disable dead-letter forwarding and with new Send authorization rule
+ - Update queue to remove the Send Authorization rule.
+ - Get default authorization rule.
+ - Get the keys from authorization rule to connect to queue.
+ - Send a "Hello" message to queue using Data plan sdk for Service Bus.
+ - Delete queue
+ - Delete namespace
 
 
 ## Running this Sample ##
