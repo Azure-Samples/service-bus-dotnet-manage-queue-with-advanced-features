@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-
 using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
@@ -10,6 +9,7 @@ using Microsoft.Azure.Management.ServiceBus.Fluent;
 using System;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ServiceBusQueueAdvanceFeatures
 {
@@ -128,7 +128,7 @@ namespace ServiceBusQueueAdvanceFeatures
 
                 //=============================================================
                 // Send a message to queue.
-                Utilities.SendMessageToQueue(keys.PrimaryConnectionString, queue1Name, "Hello");
+                Task.Run(() => Utilities.SendMessageToQueue(keys.PrimaryConnectionString, queue1Name, "Hello")).Wait();
 
                 //=============================================================
                 // Delete a queue and namespace
@@ -165,8 +165,6 @@ namespace ServiceBusQueueAdvanceFeatures
                     Utilities.Log(g);
                 }
             }
-
-
         }
 
         public static void Main(string[] args)
@@ -177,7 +175,7 @@ namespace ServiceBusQueueAdvanceFeatures
                 // Authenticate
                 var credentials = SdkContext.AzureCredentialsFactory.FromFile(Environment.GetEnvironmentVariable("AZURE_AUTH_LOCATION"));
 
-                var azure = Azure
+                var azure = Microsoft.Azure.Management.Fluent.Azure
                     .Configure()
                     .WithLogLevel(HttpLoggingDelegatingHandler.Level.Basic)
                     .Authenticate(credentials)
