@@ -142,9 +142,11 @@ namespace ServiceBusQueueAdvanceFeatures
                 {
                     azure.ServiceBusNamespaces.DeleteById(serviceBusNamespace.Id);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Utilities.Log("Unexpected error occured: " + e.Message);
                 }
+
                 Utilities.Log("Deleted namespace " + namespaceName + "...");
 
             }
