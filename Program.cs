@@ -128,7 +128,7 @@ namespace ServiceBusQueueAdvanceFeatures
 
                 //=============================================================
                 // Send a message to queue.
-                Task.Run(() => Utilities.SendMessageToQueue(keys.PrimaryConnectionString, queue1Name, "Hello")).Wait();
+                Utilities.SendMessageToQueue(keys.PrimaryConnectionString, queue1Name, "Hello");
 
                 //=============================================================
                 // Delete a queue and namespace
