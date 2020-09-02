@@ -8,7 +8,6 @@ using Microsoft.Azure.Management.Samples.Common;
 using Microsoft.Azure.Management.ServiceBus.Fluent;
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ServiceBusQueueAdvanceFeatures
@@ -31,7 +30,7 @@ namespace ServiceBusQueueAdvanceFeatures
          * - Delete queue
          * - Delete namespace
          */
-        public static void RunSample(IAzure azure)
+        public static async Task RunSample(IAzure azure)
         {
             var rgName = SdkContext.RandomResourceName("rgSB04_", 24);
             var namespaceName = SdkContext.RandomResourceName("namespace", 20);
@@ -128,7 +127,7 @@ namespace ServiceBusQueueAdvanceFeatures
 
                 //=============================================================
                 // Send a message to queue.
-                Utilities.SendMessageToQueue(keys.PrimaryConnectionString, queue1Name, "Hello");
+                await Utilities.SendMessageToQueueAsync(keys.PrimaryConnectionString, queue1Name, "Hello");
 
                 //=============================================================
                 // Delete a queue and namespace
@@ -169,7 +168,7 @@ namespace ServiceBusQueueAdvanceFeatures
             }
         }
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             try
             {
@@ -186,7 +185,7 @@ namespace ServiceBusQueueAdvanceFeatures
                 // Print selected subscription
                 Utilities.Log("Selected subscription: " + azure.SubscriptionId);
 
-                RunSample(azure);
+                await RunSample(azure);
             }
             catch (Exception e)
             {
