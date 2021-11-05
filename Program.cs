@@ -2,14 +2,13 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 
-using Microsoft.Azure.Management.Fluent;
-using Microsoft.Azure.Management.ResourceManager.Fluent;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
-using Microsoft.Azure.Management.Samples.Common;
-using Microsoft.Azure.Management.ServiceBus.Fluent;
 using System;
 using System.Linq;
 using System.Text;
+using Microsoft.Azure.Management.Fluent;
+using Microsoft.Azure.Management.ResourceManager.Fluent;
+using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
+using Microsoft.Azure.Management.ServiceBus.Fluent;
 
 namespace ServiceBusQueueAdvanceFeatures
 {
@@ -27,7 +26,6 @@ namespace ServiceBusQueueAdvanceFeatures
          * - Update queue to remove the Send Authorization rule.
          * - Get default authorization rule.
          * - Get the keys from authorization rule to connect to queue.
-         * - Send a "Hello" message to queue using Data plan sdk for Service Bus.
          * - Delete queue
          * - Delete namespace
          */
@@ -44,7 +42,7 @@ namespace ServiceBusQueueAdvanceFeatures
                 //============================================================
                 // Create a namespace.
 
-                Utilities.Log("Creating name space " + namespaceName + " in resource group " + rgName + "...");
+                Console.WriteLine("Creating name space " + namespaceName + " in resource group " + rgName + "...");
 
                 var serviceBusNamespace = azure.ServiceBusNamespaces
                         .Define(namespaceName)
@@ -53,12 +51,12 @@ namespace ServiceBusQueueAdvanceFeatures
                         .WithSku(NamespaceSku.Standard)
                         .Create();
 
-                Utilities.Log("Created service bus " + serviceBusNamespace.Name);
-                Utilities.Print(serviceBusNamespace);
+                Console.WriteLine("Created service bus " + serviceBusNamespace.Name);
+                PrintServiceBusNamespace(serviceBusNamespace);
 
                 //============================================================
                 // Add a queue in namespace with features session and dead-lettering.
-                Utilities.Log("Creating first queue " + queue1Name + ", with session, time to live and move to dead-letter queue features...");
+                Console.WriteLine("Creating first queue " + queue1Name + ", with session, time to live and move to dead-letter queue features...");
 
                 var firstQueue = serviceBusNamespace.Queues.Define(queue1Name)
                         .WithSession()
@@ -66,12 +64,12 @@ namespace ServiceBusQueueAdvanceFeatures
                         .WithExpiredMessageMovedToDeadLetterQueue()
                         .WithMessageMovedToDeadLetterQueueOnMaxDeliveryCount(40)
                         .Create();
-                Utilities.Print(firstQueue);
+                PrintQueue(firstQueue);
 
                 //============================================================
                 // Create second queue with Deduplication and AutoDeleteOnIdle feature
 
-                Utilities.Log("Creating second queue " + queue2Name + ", with De-duplication and AutoDeleteOnIdle features...");
+                Console.WriteLine("Creating second queue " + queue2Name + ", with De-duplication and AutoDeleteOnIdle features...");
 
                 var secondQueue = serviceBusNamespace.Queues.Define(queue2Name)
                         .WithSizeInMB(2048)
@@ -79,9 +77,9 @@ namespace ServiceBusQueueAdvanceFeatures
                         .WithDeleteOnIdleDurationInMinutes(10)
                         .Create();
 
-                Utilities.Log("Created second queue in namespace");
+                Console.WriteLine("Created second queue in namespace");
 
-                Utilities.Print(secondQueue);
+                PrintQueue(secondQueue);
 
                 //============================================================
                 // Update second queue to change time for AutoDeleteOnIdle.
@@ -90,9 +88,9 @@ namespace ServiceBusQueueAdvanceFeatures
                         .WithDeleteOnIdleDurationInMinutes(5)
                         .Apply();
 
-                Utilities.Log("Updated second queue to change its auto deletion time");
+                Console.WriteLine("Updated second queue to change its auto deletion time");
 
-                Utilities.Print(secondQueue);
+                PrintQueue(secondQueue);
 
                 //=============================================================
                 // Update first queue to disable dead-letter forwarding and with new Send authorization rule
@@ -101,42 +99,39 @@ namespace ServiceBusQueueAdvanceFeatures
                         .WithNewSendRule(sendRuleName)
                         .Apply();
 
-                Utilities.Log("Updated first queue to change dead-letter forwarding");
+                Console.WriteLine("Updated first queue to change dead-letter forwarding");
 
-                Utilities.Print(secondQueue);
+                PrintQueue(secondQueue);
 
                 //=============================================================
                 // Get connection string for default authorization rule of namespace
 
                 var namespaceAuthorizationRules = serviceBusNamespace.AuthorizationRules.List();
-                Utilities.Log("Number of authorization rule for namespace :" + namespaceAuthorizationRules.Count());
+                Console.WriteLine("Number of authorization rule for namespace :" + namespaceAuthorizationRules.Count());
 
 
                 foreach (var namespaceAuthorizationRule in namespaceAuthorizationRules)
                 {
-                    Utilities.Print(namespaceAuthorizationRule);
+                    PrintNamespaceAuthorizationRule(namespaceAuthorizationRule);
                 }
 
-                Utilities.Log("Getting keys for authorization rule ...");
+                Console.WriteLine("Getting keys for authorization rule ...");
 
                 var keys = namespaceAuthorizationRules.FirstOrDefault().GetKeys();
-                Utilities.Print(keys);
+                PrintKeys(keys);
 
                 //=============================================================
                 // Update first queue to remove Send Authorization rule.
                 firstQueue.Update().WithoutAuthorizationRule(sendRuleName).Apply();
 
-                //=============================================================
-                // Send a message to queue.
-                Utilities.SendMessageToQueue(keys.PrimaryConnectionString, queue1Name, "Hello");
 
                 //=============================================================
                 // Delete a queue and namespace
-                Utilities.Log("Deleting queue " + queue1Name + "in namespace " + namespaceName + "...");
+                Console.WriteLine("Deleting queue " + queue1Name + "in namespace " + namespaceName + "...");
                 serviceBusNamespace.Queues.DeleteByName(queue1Name);
-                Utilities.Log("Deleted queue " + queue1Name + "...");
+                Console.WriteLine("Deleted queue " + queue1Name + "...");
 
-                Utilities.Log("Deleting namespace " + namespaceName + "...");
+                Console.WriteLine("Deleting namespace " + namespaceName + "...");
                 // This will delete the namespace and queue within it.
                 try
                 {
@@ -145,28 +140,26 @@ namespace ServiceBusQueueAdvanceFeatures
                 catch (Exception)
                 {
                 }
-                Utilities.Log("Deleted namespace " + namespaceName + "...");
+                Console.WriteLine("Deleted namespace " + namespaceName + "...");
 
             }
             finally
             {
                 try
                 {
-                    Utilities.Log("Deleting Resource Group: " + rgName);
+                    Console.WriteLine("Deleting Resource Group: " + rgName);
                     azure.ResourceGroups.BeginDeleteByName(rgName);
-                    Utilities.Log("Deleted Resource Group: " + rgName);
+                    Console.WriteLine("Deleted Resource Group: " + rgName);
                 }
                 catch (NullReferenceException)
                 {
-                    Utilities.Log("Did not create any resources in Azure. No clean up is necessary");
+                    Console.WriteLine("Did not create any resources in Azure. No clean up is necessary");
                 }
                 catch (Exception g)
                 {
-                    Utilities.Log(g);
+                    Console.WriteLine(g);
                 }
             }
-
-
         }
 
         public static void Main(string[] args)
@@ -184,15 +177,97 @@ namespace ServiceBusQueueAdvanceFeatures
                     .WithDefaultSubscription();
 
                 // Print selected subscription
-                Utilities.Log("Selected subscription: " + azure.SubscriptionId);
+                Console.WriteLine("Selected subscription: " + azure.SubscriptionId);
 
                 RunSample(azure);
             }
             catch (Exception e)
             {
-                Utilities.Log(e.ToString());
+                Console.WriteLine(e.ToString());
             }
         }
 
+        static void PrintServiceBusNamespace(IServiceBusNamespace serviceBusNamespace)
+        {
+            var builder = new StringBuilder()
+                    .Append("Service bus Namespace: ").Append(serviceBusNamespace.Id)
+                    .Append("\n\tName: ").Append(serviceBusNamespace.Name)
+                    .Append("\n\tRegion: ").Append(serviceBusNamespace.RegionName)
+                    .Append("\n\tResourceGroupName: ").Append(serviceBusNamespace.ResourceGroupName)
+                    .Append("\n\tCreatedAt: ").Append(serviceBusNamespace.CreatedAt)
+                    .Append("\n\tUpdatedAt: ").Append(serviceBusNamespace.UpdatedAt)
+                    .Append("\n\tDnsLabel: ").Append(serviceBusNamespace.DnsLabel)
+                    .Append("\n\tFQDN: ").Append(serviceBusNamespace.Fqdn)
+                    .Append("\n\tSku: ")
+                    .Append("\n\t\tCapacity: ").Append(serviceBusNamespace.Sku.Capacity)
+                    .Append("\n\t\tSkuName: ").Append(serviceBusNamespace.Sku.Name)
+                    .Append("\n\t\tTier: ").Append(serviceBusNamespace.Sku.Tier);
+
+            Console.WriteLine(builder.ToString());
+        }
+
+        static void PrintQueue(IQueue queue)
+        {
+            StringBuilder builder = new StringBuilder()
+                    .Append("Service bus Queue: ").Append(queue.Id)
+                    .Append("\n\tName: ").Append(queue.Name)
+                    .Append("\n\tResourceGroupName: ").Append(queue.ResourceGroupName)
+                    .Append("\n\tCreatedAt: ").Append(queue.CreatedAt)
+                    .Append("\n\tUpdatedAt: ").Append(queue.UpdatedAt)
+                    .Append("\n\tAccessedAt: ").Append(queue.AccessedAt)
+                    .Append("\n\tActiveMessageCount: ").Append(queue.ActiveMessageCount)
+                    .Append("\n\tCurrentSizeInBytes: ").Append(queue.CurrentSizeInBytes)
+                    .Append("\n\tDeadLetterMessageCount: ").Append(queue.DeadLetterMessageCount)
+                    .Append("\n\tDefaultMessageTtlDuration: ").Append(queue.DefaultMessageTtlDuration)
+                    .Append("\n\tDuplicateMessageDetectionHistoryDuration: ").Append(queue.DuplicateMessageDetectionHistoryDuration)
+                    .Append("\n\tIsBatchedOperationsEnabled: ").Append(queue.IsBatchedOperationsEnabled)
+                    .Append("\n\tIsDeadLetteringEnabledForExpiredMessages: ").Append(queue.IsDeadLetteringEnabledForExpiredMessages)
+                    .Append("\n\tIsDuplicateDetectionEnabled: ").Append(queue.IsDuplicateDetectionEnabled)
+                    .Append("\n\tIsExpressEnabled: ").Append(queue.IsExpressEnabled)
+                    .Append("\n\tIsPartitioningEnabled: ").Append(queue.IsPartitioningEnabled)
+                    .Append("\n\tIsSessionEnabled: ").Append(queue.IsSessionEnabled)
+                    .Append("\n\tDeleteOnIdleDurationInMinutes: ").Append(queue.DeleteOnIdleDurationInMinutes)
+                    .Append("\n\tMaxDeliveryCountBeforeDeadLetteringMessage: ").Append(queue.MaxDeliveryCountBeforeDeadLetteringMessage)
+                    .Append("\n\tMaxSizeInMB: ").Append(queue.MaxSizeInMB)
+                    .Append("\n\tMessageCount: ").Append(queue.MessageCount)
+                    .Append("\n\tScheduledMessageCount: ").Append(queue.ScheduledMessageCount)
+                    .Append("\n\tStatus: ").Append(queue.Status)
+                    .Append("\n\tTransferMessageCount: ").Append(queue.TransferMessageCount)
+                    .Append("\n\tLockDurationInSeconds: ").Append(queue.LockDurationInSeconds)
+                    .Append("\n\tTransferDeadLetterMessageCount: ").Append(queue.TransferDeadLetterMessageCount);
+
+            Console.WriteLine(builder.ToString());
+        }
+
+        static void PrintNamespaceAuthorizationRule(INamespaceAuthorizationRule namespaceAuthorizationRule)
+        {
+            StringBuilder builder = new StringBuilder()
+                    .Append("Service bus queue authorization rule: ").Append(namespaceAuthorizationRule.Id)
+                    .Append("\n\tName: ").Append(namespaceAuthorizationRule.Name)
+                    .Append("\n\tResourceGroupName: ").Append(namespaceAuthorizationRule.ResourceGroupName)
+                    .Append("\n\tNamespace Name: ").Append(namespaceAuthorizationRule.NamespaceName);
+
+            var rights = namespaceAuthorizationRule.Rights;
+            builder.Append("\n\tNumber of access rights in queue: ").Append(rights.Count());
+            foreach (var right in rights)
+            {
+                builder.Append("\n\t\tAccessRight: ")
+                        .Append("\n\t\t\tName :").Append(right.ToString());
+            }
+
+            Console.WriteLine(builder.ToString());
+        }
+
+        static void PrintKeys(IAuthorizationKeys keys)
+        {
+            StringBuilder builder = new StringBuilder()
+                    .Append("Authorization keys: ")
+                    .Append("\n\tPrimaryKey: ").Append(keys.PrimaryKey)
+                    .Append("\n\tPrimaryConnectionString: ").Append(keys.PrimaryConnectionString)
+                    .Append("\n\tSecondaryKey: ").Append(keys.SecondaryKey)
+                    .Append("\n\tSecondaryConnectionString: ").Append(keys.SecondaryConnectionString);
+
+            Console.WriteLine(builder.ToString());
+        }
     }
 }

@@ -22,10 +22,10 @@ extensions:
  - Update queue to remove the Send Authorization rule.
  - Get default authorization rule.
  - Get the keys from authorization rule to connect to queue.
- - Send a "Hello" message to queue using Data plan sdk for Service Bus.
  - Delete queue
  - Delete namespace
 
+ For more on how to use Azure Service Bus see the [samples for sending and receiving messages](https://docs.microsoft.com/samples/azure/azure-sdk-for-net/azuremessagingservicebus-samples/).
 
 ## Running this Sample ##
 
