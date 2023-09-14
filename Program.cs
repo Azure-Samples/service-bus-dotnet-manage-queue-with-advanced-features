@@ -87,7 +87,7 @@ namespace ServiceBusQueueAdvanceFeatures
                     AutoDeleteOnIdle = TimeSpan.FromMinutes(10),
                 };
                 var queue2 = (await queueCollection.CreateOrUpdateAsync(WaitUntil.Completed, queue2Name, queue2Data)).Value;
-                Utilities.Log("Creating second queue with name : " + queue2.Data.Name);
+                Utilities.Log("Created second queue with name : " + queue2.Data.Name);
 
                 //============================================================
                 
