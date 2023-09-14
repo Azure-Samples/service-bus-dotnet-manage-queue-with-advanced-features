@@ -73,7 +73,7 @@ namespace ServiceBusQueueAdvanceFeatures
                     MaxDeliveryCount = 40,
                 };
                 var queue = (await queueCollection.CreateOrUpdateAsync(WaitUntil.Completed, queue1Name, queueData)).Value;
-                Utilities.Log("Creating first queue with name : " + queue.Data.Name);
+                Utilities.Log("Created first queue with name : " + queue.Data.Name);
 
                 //============================================================
 
